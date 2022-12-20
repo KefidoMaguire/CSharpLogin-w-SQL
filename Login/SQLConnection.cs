@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -37,6 +38,16 @@ namespace Login
             return null;
         }
 
+        public string hashPW(string input)
+        {
+            using (MD5 md5 = MD5.Create())
+            {
+                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+                byte[] hashBytes = md5.ComputeHash(inputBytes);
+                return BitConverter.ToString(hashBytes).Replace("-", "");
+            }
+        }
+
         public void checkUser(string user,string pw,bool register)
         {
             string queryRegister = "INSERT INTO LoginData (LoginName, Password) VALUES ('"+user+"','"+pw+"')";
@@ -56,6 +67,7 @@ namespace Login
             }
         }
 
+        
 
     }
 }

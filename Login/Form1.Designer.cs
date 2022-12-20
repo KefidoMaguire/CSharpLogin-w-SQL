@@ -69,6 +69,7 @@
             this.PWBox.Name = "PWBox";
             this.PWBox.Size = new System.Drawing.Size(100, 20);
             this.PWBox.TabIndex = 3;
+            this.PWBox.UseSystemPasswordChar = true;
             // 
             // registercheck
             // 

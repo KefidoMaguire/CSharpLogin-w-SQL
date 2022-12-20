@@ -20,7 +20,7 @@ namespace Login
         private void login_Click(object sender, EventArgs e)
         {
            SQLConnection sc = new SQLConnection();
-           sc.checkUser(NameBox.Text,PWBox.Text, registercheck.Checked);
+           sc.checkUser(NameBox.Text,sc.hashPW(PWBox.Text), registercheck.Checked);
         }
     }
 }
