@@ -48,11 +48,10 @@ namespace Login
             }
         }
 
-        public void checkUser(string user,string pw,bool register)
+        public bool checkUser(string user,string pw,bool register)
         {
             string queryRegister = "INSERT INTO LoginData (LoginName, Password) VALUES ('"+user+"','"+pw+"')";
             string queryLogin = "SELECT COUNT(*) from LoginData where LoginName like '"+user+"' AND Password like '"+pw+"'";
-            Form2 form2 = new Form2();
             SqlCommand commandRegister = new SqlCommand(queryRegister, connectionStringBuilder());
             SqlCommand commandLogin = new SqlCommand(queryLogin, connectionStringBuilder());
 
@@ -63,8 +62,12 @@ namespace Login
             else
             {
                 int userCount = (int)commandLogin.ExecuteScalar();
-                if (userCount > 0) form2.Show();
+                if (userCount > 0) 
+
+                return true;
             }
+
+            return false;
         }
 
         

@@ -22,14 +22,12 @@ namespace Login
         //            client.UploadFile(url, @"C:\Users\kefid\OneDrive\Bilder\dondacover.png");
 
         public string UploadFile(string FtpUrl, string fileName, string userName, string password, string
-     UploadDirectory = "")
+        UploadDirectory)
         {
             string PureFileName = new FileInfo(fileName).Name;
             String uploadUrl = String.Format("{0}{1}/{2}", FtpUrl, UploadDirectory, PureFileName);
             FtpWebRequest req = (FtpWebRequest)FtpWebRequest.Create(uploadUrl);
-            req.EnableSsl = true;
-            ServicePointManager.ServerCertificateValidationCallback =
-                      (s, certificate, chain, sslPolicyErrors) => true;
+            
             req.Proxy = null;
             req.Method = WebRequestMethods.Ftp.UploadFile;
             req.Credentials = new NetworkCredential(userName, password);
@@ -43,6 +41,40 @@ namespace Login
             FtpWebResponse res = (FtpWebResponse)req.GetResponse();
             return res.StatusDescription;
         }
+
+
+        public List<string> getAllFTPFiles(string FtpUrl, string userName, string password)
+        {
+            List <string> files = new List<string>();
+            try
+            {
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(FtpUrl);
+                request.Method = WebRequestMethods.Ftp.ListDirectory;
+
+                request.EnableSsl = true;
+                ServicePointManager.ServerCertificateValidationCallback =
+                          (s, certificate, chain, sslPolicyErrors) => true;
+
+                request.Credentials = new NetworkCredential(userName, password);
+                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+                Stream responseStream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(responseStream);
+                string names = reader.ReadToEnd();
+
+                reader.Close();
+                response.Close();
+
+                return names.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+
+            return null;
+        }
+
 
     }
 }
